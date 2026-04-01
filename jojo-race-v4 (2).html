@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#ff6600">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="JOJO RACE">
+<link rel="manifest" href="data:application/json,{}">
+<title>🏁 JOJO RACE</title>
+<style>
+:root{
+  --or:#ff6600;--or2:#ffd600;--rouge:#e8221a;--vert:#00c853;
+  --bleu:#1565c0;--bg:#08080f;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#fff;}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.screen{display:none;width:100%;height:100%;flex-direction:column;align-items:center;justify-content:center;}
+.screen.on{display:flex;}
+
+/* ═══════════════════════════════════
+   HOME
+═══════════════════════════════════ */
+#sh{background:radial-gradient(ellipse at 50% 25%,#1e0540 0%,#08080f 65%);position:relative;overflow:hidden;}
+/* Ciel étoilé */
+#sh::before{content:'';position:absolute;inset:0;background:radial-gradient(1px 1px at 20% 15%,#fff,transparent),radial-gradient(1px 1px at 80% 10%,#fff,transparent),radial-gradient(1.5px 1.5px at 50% 5%,#fff,transparent),radial-gradient(1px 1px at 30% 30%,#fff,transparent),radial-gradient(1px 1px at 70% 25%,#fff,transparent),radial-gradient(1px 1px at 10% 40%,rgba(255,255,255,.5),transparent),radial-gradient(1px 1px at 90% 35%,rgba(255,255,255,.5),transparent);pointer-events:none;}
+/* Piste asphalte */
+.h-track{position:absolute;bottom:0;left:0;right:0;height:100px;background:#1a1a1a;border-top:4px solid rgba(255,214,0,.4);}
+.h-track::after{content:'';position:absolute;top:50%;left:0;right:0;height:3px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.8) 0,rgba(255,255,255,.8) 30px,transparent 30px,transparent 62px);transform:translateY(-50%);}
+/* Container voitures — gauche vers droite (sens naturel) */
+.h-cars{position:absolute;bottom:16px;left:0;display:flex;gap:28px;animation:cars-go 8s linear infinite;}
+@keyframes cars-go{from{transform:translateX(-320px);}to{transform:translateX(calc(100vw + 320px));}}
+
+/* Logo */
+.h-logo{position:relative;z-index:2;text-align:center;margin-bottom:.4rem;}
+.h-jojo{display:block;font-size:clamp(3rem,13vw,5.5rem);font-weight:900;letter-spacing:-2px;background:linear-gradient(135deg,#ffd600,#ff6600);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 28px rgba(255,150,0,.55));}
+.h-race{display:block;font-size:clamp(1.4rem,6vw,2.5rem);font-weight:900;letter-spacing:10px;background:linear-gradient(135deg,#ff8080,#e8221a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 18px rgba(232,34,26,.6));}
+.h-flag{font-size:clamp(2rem,8vw,3.5rem);-webkit-text-fill-color:initial;display:block;margin-bottom:.4rem;}
+.h-sub{font-size:.85rem;color:rgba(255,255,255,.45);letter-spacing:3px;text-transform:uppercase;margin-bottom:2.2rem;position:relative;z-index:2;}
+.btn-play{background:linear-gradient(135deg,#ff6600,#e8221a);color:#fff;border:none;border-radius:50px;padding:1rem 3.5rem;font-size:1.2rem;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:2px;text-transform:uppercase;box-shadow:0 6px 28px rgba(255,100,0,.55);position:relative;z-index:2;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 6px 28px rgba(255,100,0,.55);}50%{box-shadow:0 6px 48px rgba(255,100,0,.85),0 0 0 8px rgba(255,100,0,.12);}}
+.btn-play:active{transform:scale(.96);}
+.admin-btn{position:absolute;top:12px;right:12px;z-index:10;width:36px;height:36px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;}
+.admin-btn:active{background:rgba(255,255,255,.15);}
+
+/* ═══════════════════════════════════
+   ADMIN LOGIN
+═══════════════════════════════════ */
+#sal{background:radial-gradient(ellipse at 50% 0%,#0a1e30,var(--bg));gap:1rem;}
+.al-ico{font-size:2.8rem;}
+.al-title{font-size:1.3rem;font-weight:800;color:var(--or2);letter-spacing:2px;}
+.al-sub{font-size:.78rem;color:rgba(255,255,255,.4);}
+.aform{display:flex;flex-direction:column;gap:.7rem;width:90%;max-width:300px;}
+.ainp{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);color:#fff;border-radius:12px;padding:.75rem 1rem;font-size:1rem;font-family:inherit;outline:none;}
+.ainp:focus{border-color:var(--or2);}
+.ainp::placeholder{color:rgba(255,255,255,.3);}
+.btn-alog{background:linear-gradient(135deg,var(--or2),#ff6600);color:#111;border:none;border-radius:50px;padding:.85rem;font-size:1rem;font-weight:900;cursor:pointer;font-family:inherit;width:100%;}
+.btn-alog:active{transform:scale(.97);}
+.aerr{font-size:.8rem;color:#ff7070;text-align:center;min-height:1rem;}
+.btn-back{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.55);border-radius:50px;padding:.6rem 1.5rem;font-size:.82rem;cursor:pointer;font-family:inherit;}
+
+/* ═══════════════════════════════════
+   ADMIN PANEL
+═══════════════════════════════════ */
+#sadm{background:#080d14;flex-direction:column;overflow:hidden;}
+.adm-hdr{display:flex;align-items:center;gap:.6rem;padding:.65rem 1rem;background:rgba(0,0,0,.55);border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;width:100%;}
+.adm-hdr h2{font-size:.95rem;font-weight:800;color:var(--or2);flex:1;}
+.adm-tabs{display:flex;gap:.4rem;padding:.55rem .9rem;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;}
+.atab{flex:1;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.09);color:rgba(255,255,255,.55);border-radius:10px;padding:.45rem;font-size:.75rem;font-weight:700;cursor:pointer;font-family:inherit;text-align:center;}
+.atab.on{background:linear-gradient(135deg,#ff6600,#e8221a);border-color:transparent;color:#fff;}
+.adm-body{flex:1;overflow-y:auto;padding:.9rem;}
+.adm-sec{font-size:.7rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.6rem;}
+.dec-prev{width:100%;height:100px;background:linear-gradient(135deg,#0d2b0d,#1a4a1a);border-radius:10px;border:1.5px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;margin-bottom:.7rem;overflow:hidden;}
+.dec-prev img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
+.btn-upl{background:rgba(255,255,255,.06);border:1.5px dashed rgba(255,255,255,.22);color:rgba(255,255,255,.65);border-radius:10px;padding:.75rem;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;width:100%;margin-bottom:.5rem;}
+.dec-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.55rem;margin-bottom:.7rem;}
+.dec-opt{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.09);border-radius:10px;padding:.65rem;font-size:.78rem;font-weight:500;cursor:pointer;text-align:center;}
+.dec-opt.on{border-color:var(--vert);background:rgba(0,200,83,.1);color:#7effc0;}
+.col-bg-row{display:flex;gap:.45rem;flex-wrap:wrap;margin-bottom:.7rem;}
+.cbg{width:28px;height:28px;border-radius:7px;cursor:pointer;border:2px solid transparent;}
+.cbg.on{border-color:#fff;transform:scale(1.18);}
+.q-list{display:flex;flex-direction:column;gap:.55rem;}
+.q-itm{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:.75rem;position:relative;}
+.q-itm h4{font-size:.82rem;font-weight:600;margin-bottom:.35rem;padding-right:1.5rem;}
+.q-ans-row{font-size:.72rem;color:rgba(255,255,255,.45);padding:1px 0;}
+.q-ans-row.c{color:#7effc0;font-weight:600;}
+.q-itm-btns{display:flex;gap:.35rem;margin-top:.5rem;}
+.btn-qed{background:rgba(255,214,0,.1);border:1px solid rgba(255,214,0,.3);color:var(--or2);border-radius:7px;padding:3px 9px;font-size:.7rem;cursor:pointer;font-family:inherit;}
+.btn-qdl{background:rgba(232,34,26,.1);border:1px solid rgba(232,34,26,.3);color:#ff8080;border-radius:7px;padding:3px 9px;font-size:.7rem;cursor:pointer;font-family:inherit;}
+.btn-qadd{background:linear-gradient(135deg,var(--vert),#00a846);color:#fff;border:none;border-radius:50px;padding:.75rem;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;width:100%;margin-top:.7rem;}
+
+/* ═══ MODAL EDIT QUESTION ═══ */
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:flex-end;justify-content:center;z-index:900;}
+.mov.open{display:flex;}
+.msh{background:linear-gradient(to top,#0c1520,#080d14);border-top:1px solid rgba(255,255,255,.1);border-radius:22px 22px 0 0;padding:1.2rem;width:100%;max-width:480px;transform:translateY(100%);transition:transform .3s cubic-bezier(.34,1.56,.64,1);max-height:88vh;overflow-y:auto;}
+.mov.open .msh{transform:translateY(0);}
+.mh{width:38px;height:4px;background:rgba(255,255,255,.18);border-radius:2px;margin:0 auto .75rem;}
+.mt{font-size:.95rem;font-weight:800;color:var(--or2);margin-bottom:.9rem;}
+.mg{margin-bottom:.65rem;}
+.mg label{display:block;font-size:.68rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:.28rem;}
+.mg input,.mg textarea,.mg select{width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.13);color:#fff;border-radius:9px;padding:.58rem .8rem;font-size:.88rem;font-family:inherit;outline:none;}
+.mg input:focus,.mg textarea:focus{border-color:var(--or2);}
+.mg textarea{min-height:58px;resize:none;}
+.csel{display:flex;gap:.35rem;margin-top:.25rem;}
+.csb{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.12);color:rgba(255,255,255,.65);border-radius:7px;padding:3px 10px;font-size:.75rem;cursor:pointer;font-family:inherit;}
+.csb.on{background:rgba(0,200,83,.18);border-color:var(--vert);color:#7effc0;}
+.btn-img-q{background:rgba(255,255,255,.06);border:1.5px dashed rgba(255,255,255,.22);color:rgba(255,255,255,.58);border-radius:9px;padding:.55rem;font-size:.78rem;cursor:pointer;font-family:inherit;width:100%;margin-bottom:.35rem;}
+.eq-imgp{width:100%;height:70px;object-fit:cover;border-radius:7px;margin-bottom:.35rem;display:none;}
+.btn-sv{background:linear-gradient(135deg,var(--vert),#00a846);color:#fff;border:none;border-radius:50px;padding:.78rem;font-size:.92rem;font-weight:700;cursor:pointer;font-family:inherit;width:100%;margin-top:.4rem;}
+.btn-cn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.45);border-radius:50px;padding:.65rem;font-size:.82rem;cursor:pointer;font-family:inherit;width:100%;margin-top:.35rem;}
+
+/* ═══════════════════════════════════
+   PLAYERS
+═══════════════════════════════════ */
+#spl{background:radial-gradient(ellipse at 50% 0%,#1a0533,var(--bg));padding:1.1rem 1rem;gap:.8rem;overflow-y:auto;}
+.pl-title{font-size:1.35rem;font-weight:900;letter-spacing:2px;background:linear-gradient(135deg,var(--or2),#ff6600);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-transform:uppercase;}
+.pl-sub{font-size:.78rem;color:rgba(255,255,255,.45);letter-spacing:1px;}
+.nb-row{display:flex;gap:.55rem;}
+.nb-b{width:50px;height:50px;border-radius:13px;border:2px solid rgba(255,255,255,.13);background:rgba(255,255,255,.04);color:#fff;font-size:1.35rem;font-weight:800;cursor:pointer;font-family:inherit;}
+.nb-b.on{background:linear-gradient(135deg,#ff6600,#e8221a);border-color:transparent;box-shadow:0 4px 14px rgba(255,100,0,.4);}
+.nb-b:active{transform:scale(.93);}
+.pl-cfg{display:flex;flex-direction:column;gap:.55rem;width:100%;max-width:400px;}
+.pl-row{display:flex;align-items:center;gap:.65rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:13px;padding:.55rem .85rem;}
+/* Aperçu voiture sans fond */
+.car-prev{width:80px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:transparent;}
+.pname{flex:1;background:transparent;border:none;color:#fff;font-size:.95rem;font-weight:600;font-family:inherit;outline:none;}
+.pname::placeholder{color:rgba(255,255,255,.28);}
+.col-row{display:flex;gap:4px;flex-wrap:wrap;max-width:148px;}
+.cdot{width:21px;height:21px;border-radius:50%;cursor:pointer;border:2px solid transparent;}
+.cdot.on{border-color:#fff;transform:scale(1.22);}
+.slbl{font-size:.7rem;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:1.5px;align-self:flex-start;max-width:400px;width:100%;}
+.btn-start{background:linear-gradient(135deg,var(--vert),#00a846);color:#fff;border:none;border-radius:50px;padding:.88rem 2.5rem;font-size:1.05rem;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:2px;text-transform:uppercase;box-shadow:0 5px 18px rgba(0,200,83,.4);width:100%;max-width:400px;}
+.btn-start:active{transform:scale(.97);}
+
+/* ═══════════════════════════════════
+   GAME — PAYSAGE
+═══════════════════════════════════ */
+#sg{background:var(--bg);flex-direction:column;padding:0;overflow:hidden;}
+/* Rotation portrait → paysage */
+@media(orientation:portrait){
+  #sg{position:fixed;top:50%;left:50%;transform:rotate(90deg) translate(-50%,-50%);transform-origin:0 0;width:100vh;height:100vw;margin:0;}
+}
+.g-top{display:flex;align-items:center;gap:.5rem;padding:.32rem .7rem;background:rgba(0,0,0,.6);border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;width:100%;}
+.g-logo{font-size:.82rem;font-weight:900;background:linear-gradient(135deg,var(--or2),#ff6600);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;}
+.g-chip{display:flex;align-items:center;gap:.38rem;background:rgba(255,255,255,.06);border-radius:20px;padding:.18rem .55rem;flex:1;min-width:0;}
+.g-chip-name{font-size:.75rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.g-chip-pos{font-size:.62rem;color:rgba(255,255,255,.38);white-space:nowrap;}
+.g-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-left:auto;animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.25;}}
+.btn-x{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.65);border-radius:7px;padding:.26rem .52rem;font-size:.68rem;cursor:pointer;font-family:inherit;flex-shrink:0;}
+.bwrap{flex:1;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:.2rem;}
+#bc{max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 4px 28px rgba(0,0,0,.85);}
+.g-bot{display:flex;align-items:center;justify-content:space-between;gap:.55rem;padding:.35rem .75rem .45rem;background:rgba(0,0,0,.5);border-top:1px solid rgba(255,255,255,.05);flex-shrink:0;width:100%;}
+.dice-w{width:50px;height:50px;flex-shrink:0;}
+#dsv{width:50px;height:50px;filter:drop-shadow(0 3px 5px rgba(0,0,0,.6));}
+.dice-w.spin #dsv{animation:spin-d .5s ease-in-out;}
+@keyframes spin-d{0%{transform:rotate(0)scale(1);}25%{transform:rotate(20deg)scale(1.1);}50%{transform:rotate(-20deg)scale(1.15);}75%{transform:rotate(10deg)scale(1.1);}100%{transform:rotate(0)scale(1);}}
+.btn-roll{background:linear-gradient(135deg,#ff6600,#e8221a);color:#fff;border:none;border-radius:50px;padding:.58rem 1.35rem;font-size:.85rem;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:1px;text-transform:uppercase;box-shadow:0 3px 10px rgba(232,34,26,.4);white-space:nowrap;}
+.btn-roll:active{transform:scale(.96);}
+.btn-roll:disabled{opacity:.35;pointer-events:none;}
+.pmini-row{display:flex;gap:.38rem;flex-wrap:wrap;}
+.pm{display:flex;align-items:center;gap:3px;background:rgba(255,255,255,.06);border-radius:18px;padding:2px 6px;font-size:.66rem;font-weight:600;}
+.pm-dot{width:6px;height:6px;border-radius:50%;}
+
+/* ═══════════════════════════════════
+   MODALS JEU
+═══════════════════════════════════ */
+.gmo{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:flex-end;justify-content:center;z-index:500;}
+.gmo.open{display:flex;}
+.gms{background:linear-gradient(to top,#1a0838,#0d0520);border-top:1px solid rgba(255,255,255,.1);border-radius:22px 22px 0 0;padding:1.15rem;width:100%;max-width:500px;transform:translateY(100%);transition:transform .28s cubic-bezier(.34,1.56,.64,1);}
+.gmo.open .gms{transform:translateY(0);}
+.gmh{width:38px;height:4px;background:rgba(255,255,255,.18);border-radius:2px;margin:0 auto .75rem;}
+.gm-em{font-size:2.7rem;text-align:center;display:block;margin-bottom:.28rem;}
+.gm-ti{font-size:1.05rem;font-weight:800;text-align:center;margin-bottom:.22rem;}
+.gm-tx{font-size:.83rem;color:rgba(255,255,255,.68);text-align:center;margin-bottom:.95rem;line-height:1.45;}
+.btn-ok{background:linear-gradient(135deg,#ff6600,#e8221a);color:#fff;border:none;border-radius:50px;padding:.68rem 2.5rem;font-size:.92rem;font-weight:700;cursor:pointer;font-family:inherit;width:100%;}
+.btn-ok:active{transform:scale(.97);}
+/* Question */
+#mq{z-index:600;}
+.ql{display:inline-block;background:var(--bleu);color:#fff;font-size:.66rem;font-weight:700;padding:2px 9px;border-radius:18px;letter-spacing:1px;text-transform:uppercase;margin-bottom:.45rem;}
+.q-img{width:100%;max-height:120px;object-fit:cover;border-radius:9px;margin-bottom:.6rem;display:none;}
+.q-tx{font-size:.92rem;font-weight:700;margin-bottom:.72rem;line-height:1.38;}
+.q-ans{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.5rem;}
+.qb{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.13);color:#fff;border-radius:10px;padding:.62rem .85rem;font-size:.86rem;font-weight:600;cursor:pointer;font-family:inherit;text-align:left;line-height:1.3;}
+.qb.ok{background:rgba(0,200,83,.2);border-color:var(--vert);color:#7effc0;}
+.qb.ko{background:rgba(232,34,26,.2);border-color:var(--rouge);color:#ff9999;}
+.q-res{font-size:.8rem;font-weight:600;min-height:1rem;text-align:center;}
+
+/* ═══════════════════════════════════
+   TOAST
+═══════════════════════════════════ */
+.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,.94);border:2px solid rgba(255,255,255,.13);color:#fff;border-radius:18px;padding:1rem 1.6rem;font-size:.92rem;font-weight:700;text-align:center;z-index:1200;transition:transform .18s,opacity .18s;opacity:0;max-width:80vw;line-height:1.45;}
+.toast.show{transform:translate(-50%,-50%) scale(1);opacity:1;}
+
+/* ═══════════════════════════════════
+   VICTOIRE
+═══════════════════════════════════ */
+#sw{background:radial-gradient(ellipse at 50% 25%,#2a0a3e,var(--bg));gap:.6rem;text-align:center;position:relative;overflow:hidden;}
+.cf{position:absolute;border-radius:2px;animation:cf-fall 3s linear infinite;top:-20px;}
+@keyframes cf-fall{to{transform:translateY(110vh) rotate(360deg);}}
+.w-cr{font-size:4rem;animation:cr-b 1s ease-in-out infinite alternate;}
+@keyframes cr-b{from{transform:translateY(0);}to{transform:translateY(-10px);}}
+.w-ti{font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,var(--or2),#ff6600);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-transform:uppercase;letter-spacing:3px;}
+.w-nm{font-size:1.35rem;font-weight:800;}
+.w-pod{display:flex;align-items:flex-end;gap:.45rem;justify-content:center;margin:.3rem 0;}
+.pc{text-align:center;display:flex;flex-direction:column;align-items:center;gap:.2rem;}
+.pn{font-size:.68rem;font-weight:600;max-width:64px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pb{width:54px;border-radius:7px 7px 0 0;display:flex;align-items:center;justify-content:center;font-size:.88rem;font-weight:900;color:#fff;}
+.pb1{height:74px;background:linear-gradient(to top,#c9a800,var(--or2));}
+.pb2{height:50px;background:linear-gradient(to top,#555,#aaa);}
+.pb3{height:35px;background:linear-gradient(to top,#6b3500,#cd7f32);}
+.btn-rj{background:linear-gradient(135deg,#ff6600,#e8221a);color:#fff;border:none;border-radius:50px;padding:.78rem 2rem;font-size:.98rem;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:2px;text-transform:uppercase;box-shadow:0 5px 16px rgba(255,100,0,.5);}
+.btn-rj:active{transform:scale(.97);}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ═══ MODAL CASE SPÉCIALE ═══ -->
+<div class="gmo" id="msp">
+  <div class="gms">
+    <div class="gmh"></div>
+    <span class="gm-em" id="msp-em">⭐</span>
+    <div class="gm-ti" id="msp-ti">Case spéciale</div>
+    <div class="gm-tx" id="msp-tx">Texte</div>
+    <button class="btn-ok" onclick="closeSpecial()">OK 👊</button>
+  </div>
+</div>
+
+<!-- ═══ MODAL QUESTION ═══ -->
+<div class="gmo" id="mq" style="z-index:600">
+  <div class="gms">
+    <div class="gmh"></div>
+    <div class="ql">❓ QUESTION</div>
+    <img class="q-img" id="qimg" src="" alt="">
+    <div class="q-tx" id="qtx">Question ?</div>
+    <div class="q-ans" id="qans"></div>
+    <div class="q-res" id="qres"></div>
+  </div>
+</div>
+
+<!-- ═══ MODAL EDIT QUESTION ═══ -->
+<div class="mov" id="meq">
+  <div class="msh">
+    <div class="mh"></div>
+    <div class="mt" id="meq-ti">✏️ Question</div>
+    <div class="mg"><label>Question</label><textarea id="eq-q" placeholder="Votre question..."></textarea></div>
+    <div class="mg"><label>Réponse A</label><input id="eq-0" type="text" placeholder="Réponse A"></div>
+    <div class="mg"><label>Réponse B</label><input id="eq-1" type="text" placeholder="Réponse B"></div>
+    <div class="mg"><label>Réponse C</label><input id="eq-2" type="text" placeholder="Réponse C"></div>
+    <div class="mg"><label>Réponse D</label><input id="eq-3" type="text" placeholder="Réponse D"></div>
+    <div class="mg"><label>Bonne réponse</label>
+      <div class="csel">
+        <button class="csb on" id="cs0" onclick="selCorr(0)">A</button>
+        <button class="csb" id="cs1" onclick="selCorr(1)">B</button>
+        <button class="csb" id="cs2" onclick="selCorr(2)">C</button>
+        <button class="csb" id="cs3" onclick="selCorr(3)">D</button>
+      </div>
+    </div>
+    <div class="mg"><label>Image (optionnelle)</label>
+      <button class="btn-img-q" onclick="document.getElementById('fqi').click()">📷 Choisir une image</button>
+      <input type="file" id="fqi" accept="image/*" style="display:none" onchange="loadQI(this)">
+      <img class="eq-imgp" id="eq-imgp">
+    </div>
+    <button class="btn-sv" onclick="saveQ()">✅ Enregistrer</button>
+    <button class="btn-cn" onclick="document.getElementById('meq').classList.remove('open')">Annuler</button>
+  </div>
+</div>
+
+<!-- ═══ MODAL UPLOAD BG ═══ -->
+<input type="file" id="fbg" accept="image/*" style="display:none" onchange="loadBG(this)">
+
+<!-- ══════════════════════════════════════
+     HOME
+══════════════════════════════════════ -->
+<div class="screen on" id="sh">
+  <div class="h-track"></div>
+  <!-- Voitures allant gauche→droite (sens naturel de course) -->
+  <div class="h-cars" id="h-cars"></div>
+  <button class="admin-btn" onclick="showAL()" title="Admin">⚙️</button>
+  <div class="h-logo">
+    <span class="h-flag">🏁</span>
+    <span class="h-jojo">JOJO</span>
+    <span class="h-race">RACE</span>
+  </div>
+  <div class="h-sub">Le circuit des champions !</div>
+  <button class="btn-play" onclick="showPl()">JOUER ! 🎲</button>
+</div>
+
+<!-- ══════════════════════════════════════
+     ADMIN LOGIN
+══════════════════════════════════════ -->
+<div class="screen" id="sal">
+  <div class="al-ico">🔐</div>
+  <div class="al-title">ADMIN</div>
+  <div class="al-sub">Accès réservé</div>
+  <div class="aform">
+    <input class="ainp" id="au" type="text" placeholder="Identifiant" autocomplete="off">
+    <input class="ainp" id="ap" type="password" placeholder="Mot de passe" autocomplete="off">
+    <div class="aerr" id="aerr"></div>
+    <button class="btn-alog" onclick="doLogin()">CONNEXION</button>
+    <button class="btn-back" onclick="showH()">← Retour</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ADMIN PANEL
+══════════════════════════════════════ -->
+<div class="screen" id="sadm">
+  <div class="adm-hdr">
+    <span>⚙️</span>
+    <h2>ADMINISTRATEUR</h2>
+    <button class="btn-x" onclick="showH()">✕ Quitter</button>
+  </div>
+  <div class="adm-tabs">
+    <button class="atab on" onclick="admTab('dec',this)">🖼 Décors</button>
+    <button class="atab" onclick="admTab('q',this)">❓ Questions</button>
+  </div>
+  <div class="adm-body" id="adm-body"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PLAYERS CONFIG
+══════════════════════════════════════ -->
+<div class="screen" id="spl" style="padding-bottom:2rem;">
+  <div class="pl-title">🏁 PILOTES</div>
+  <div class="pl-sub">Configure ta McLaren 750S</div>
+  <div class="slbl">Nombre de joueurs</div>
+  <div class="nb-row">
+    <button class="nb-b on" onclick="setNb(1,this)">1</button>
+    <button class="nb-b" onclick="setNb(2,this)">2</button>
+    <button class="nb-b" onclick="setNb(3,this)">3</button>
+    <button class="nb-b" onclick="setNb(4,this)">4</button>
+  </div>
+  <div class="slbl">Pilotes &amp; Couleur</div>
+  <div class="pl-cfg" id="pl-cfg"></div>
+  <button class="btn-start" onclick="startGame()">🚦 EN PISTE !</button>
+</div>
+
+<!-- ══════════════════════════════════════
+     GAME
+══════════════════════════════════════ -->
+<div class="screen" id="sg">
+  <div class="g-top">
+    <div class="g-logo">🏁 JOJO RACE</div>
+    <div class="g-chip">
+      <span id="g-av" style="font-size:.95rem"></span>
+      <span class="g-chip-name" id="g-nm">Pilote</span>
+      <span class="g-chip-pos" id="g-pos">Case 0</span>
+      <div class="g-dot" id="g-dt" style="background:#00c853"></div>
+    </div>
+    <button class="btn-x" onclick="if(confirm('Quitter ?'))showH()">✕</button>
+  </div>
+  <div class="bwrap"><canvas id="bc"></canvas></div>
+  <div class="g-bot">
+    <div style="display:flex;align-items:center;gap:.6rem;">
+      <div class="dice-w" id="dw">
+        <svg id="dsv" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="dg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#cccccc"/></linearGradient></defs>
+          <rect x="2" y="2" width="56" height="56" rx="12" fill="url(#dg)" stroke="#999" stroke-width="1.5"/>
+          <g id="dd" fill="#111"></g>
+        </svg>
+      </div>
+      <button class="btn-roll" id="br" onclick="rollDice()">🎲 LANCER !</button>
+    </div>
+    <div class="pmini-row" id="pmr"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     VICTOIRE
+══════════════════════════════════════ -->
+<div class="screen" id="sw">
+  <div id="cfw" style="position:absolute;inset:0;pointer-events:none;"></div>
+  <div class="w-cr">🏆</div>
+  <div class="w-ti">VICTOIRE !</div>
+  <div class="w-nm" id="w-nm">Pilote</div>
+  <div style="font-size:.78rem;color:rgba(255,255,255,.45)">a remporté la course !</div>
+  <div class="w-pod" id="w-pod"></div>
+  <button class="btn-rj" onclick="showPl()">🔄 REJOUER</button>
+  <button class="btn-rj" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.13);margin-top:.38rem;box-shadow:none;" onclick="showH()">🏠 Accueil</button>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   McLAREN 750S — SVG fidèle vue de côté
+   Basé sur la silhouette réelle : nez très bas, toit
+   en bulle, ailerons, prises d'air, aileron arrière
+═══════════════════════════════════════════════════ */
+function mc750s(color, color2, w, h) {
+  // w×h = espace disponible, viewBox 100×40
+  return `<svg width="${w}" height="${h}" viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg">
+  <!-- Ombre portée -->
+  <ellipse cx="50" cy="38" rx="40" ry="3" fill="rgba(0,0,0,.35)"/>
+  <!-- Bas de caisse -->
+  <path d="M12 28 L88 28 L86 32 L14 32 Z" fill="${color2}"/>
+  <!-- Corps principal -->
+  <path d="M10 28 Q8 24 10 20 L18 16 Q26 12 38 11 Q50 10 60 11 Q72 12 78 16 L86 20 Q90 23 90 28 Z" fill="${color}"/>
+  <!-- Toit en bulle -->
+  <path d="M36 11 Q42 4 52 4 Q62 4 66 11 Z" fill="${color2}" opacity=".85"/>
+  <!-- Vitre -->
+  <path d="M38 11 Q44 5.5 52 5.5 Q60 5.5 64 11 Z" fill="rgba(160,220,255,.45)" stroke="rgba(255,255,255,.3)" stroke-width=".5"/>
+  <!-- Aileron arrière -->
+  <rect x="82" y="14" width="8" height="2" rx="1" fill="${color2}"/>
+  <rect x="83" y="16" width="2" height="5" fill="${color2}"/>
+  <!-- Prise d'air arrière -->
+  <path d="M76 16 L80 14 L82 18 L78 20 Z" fill="${color2}" opacity=".8"/>
+  <!-- Ligne de caisse -->
+  <path d="M12 22 Q50 20 88 22" stroke="rgba(255,255,255,.18)" stroke-width="1" fill="none"/>
+  <!-- Phares avant -->
+  <path d="M10 20 L14 18 L15 22 L11 23 Z" fill="rgba(255,240,180,.7)" stroke="${color2}" stroke-width=".5"/>
+  <!-- Feux arrière -->
+  <rect x="85" y="20" width="5" height="3" rx="1" fill="#e8221a" opacity=".9"/>
+  <!-- Roue avant -->
+  <circle cx="24" cy="31" r="7.5" fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+  <circle cx="24" cy="31" r="5" fill="#2a2a2a"/>
+  <circle cx="24" cy="31" r="2.5" fill="#444"/>
+  <!-- Jante avant (rayons) -->
+  <line x1="24" y1="26" x2="24" y2="36" stroke="#555" stroke-width=".8"/>
+  <line x1="19" y1="31" x2="29" y2="31" stroke="#555" stroke-width=".8"/>
+  <line x1="20.5" y1="27.5" x2="27.5" y2="34.5" stroke="#555" stroke-width=".8"/>
+  <line x1="27.5" y1="27.5" x2="20.5" y2="34.5" stroke="#555" stroke-width=".8"/>
+  <!-- Roue arrière -->
+  <circle cx="75" cy="31" r="8" fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+  <circle cx="75" cy="31" r="5.5" fill="#2a2a2a"/>
+  <circle cx="75" cy="31" r="2.8" fill="#444"/>
+  <!-- Jante arrière -->
+  <line x1="75" y1="23" x2="75" y2="39" stroke="#555" stroke-width=".8"/>
+  <line x1="67" y1="31" x2="83" y2="31" stroke="#555" stroke-width=".8"/>
+  <line x1="69.3" y1="25.3" x2="80.7" y2="36.7" stroke="#555" stroke-width=".8"/>
+  <line x1="80.7" y1="25.3" x2="69.3" y2="36.7" stroke="#555" stroke-width=".8"/>
+  <!-- Logo McLaren -->
+  <text x="46" y="22" font-size="4" fill="rgba(255,255,255,.6)" font-family="Arial" font-weight="bold" text-anchor="middle">McLAREN</text>
+  <!-- Splitter avant -->
+  <path d="M8 27 L14 26 L14 28 L8 28 Z" fill="${color}" opacity=".7"/>
+  <!-- Diffuseur arrière -->
+  <path d="M86 28 L92 27 L92 29 L86 29 Z" fill="${color2}" opacity=".7"/>
+</svg>`;
+}
+
+/* Version mini pour pions sur circuit */
+function mc750s_mini(color, color2, sz) {
+  const w = sz * 2.8, h = sz;
+  return `<svg width="${w}" height="${h}" viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10 28 Q8 24 10 20 L18 16 Q26 12 38 11 Q50 10 60 11 Q72 12 78 16 L86 20 Q90 23 90 28 Z" fill="${color}"/>
+  <path d="M12 28 L88 28 L86 32 L14 32 Z" fill="${color2}"/>
+  <path d="M36 11 Q44 5 52 4 Q60 5 64 11 Z" fill="${color2}" opacity=".75"/>
+  <path d="M38 11 Q44 6 52 6 Q60 6 64 11 Z" fill="rgba(160,220,255,.38)"/>
+  <rect x="82" y="14" width="7" height="1.8" rx=".9" fill="${color2}"/>
+  <circle cx="24" cy="31" r="7" fill="#111"/><circle cx="24" cy="31" r="4.5" fill="#2a2a2a"/>
+  <circle cx="75" cy="31" r="7.5" fill="#111"/><circle cx="75" cy="31" r="5" fill="#2a2a2a"/>
+  <rect x="85" y="20" width="5" height="3" rx="1" fill="#e8221a" opacity=".9"/>
+  <path d="M10 20 L14 18 L15 22 L11 23 Z" fill="rgba(255,240,180,.7)"/>
+</svg>`;
+}
+
+/* ═══════════════════════════════════════════════════
+   DONNÉES
+═══════════════════════════════════════════════════ */
+const TOTAL = 40;
+const MC_COLORS = [
+  {name:'Papaye',    hex:'#ff6600', hex2:'#cc4400'},
+  {name:'Bleu Gulf', hex:'#1565c0', hex2:'#0d47a1'},
+  {name:'Jaune',     hex:'#ffd600', hex2:'#c9a800'},
+  {name:'Vert',      hex:'#00c853', hex2:'#007c32'},
+  {name:'Blanc',     hex:'#e8e8e8', hex2:'#aaaaaa'},
+  {name:'Violet',    hex:'#7b1fa2', hex2:'#4a0072'},
+  {name:'Rouge',     hex:'#e8221a', hex2:'#a00010'},
+  {name:'Cyan',      hex:'#00bcd4', hex2:'#00838f'},
+];
+
+const SPECIALES = {
+  4: {type:'b',emoji:'⭐',titre:'Turbo !',texte:'Super départ ! Tu avances de 3 cases ! 🚀',bonus:3},
+  8: {type:'m',emoji:'🔧',titre:'Panne mécanique !',texte:'Ton moteur lâche ! Recule de 2 cases. 🔧',bonus:-2},
+  12:{type:'m',emoji:'🚦',titre:'Feu rouge !',texte:'Feu rouge ! Tu passes ton prochain tour. 🚦',bonus:0,skip:true},
+  16:{type:'b',emoji:'💨',titre:'DRS activé !',texte:'DRS ACTIF ! Tu avances de 4 cases ! 💨',bonus:4},
+  20:{type:'m',emoji:'🌧️',titre:'Pluie sur la piste !',texte:'La piste est mouillée ! Recule de 3 cases. 🌧️',bonus:-3},
+  24:{type:'b',emoji:'🍀',titre:'Safety Car !',texte:'Safety Car déployée ! Relance le dé maintenant ! 🍀',bonus:0,reroll:true},
+  28:{type:'m',emoji:'⛽',titre:'Pitstop forcé !',texte:'Pitstop non planifié ! Recule de 4 cases. ⛽',bonus:-4},
+  33:{type:'b',emoji:'🏆',titre:'Chicane parfaite !',texte:'Superbe pilotage ! Avance de 3 cases. 🏆',bonus:3},
+  37:{type:'m',emoji:'🚧',titre:'Gravel trap !',texte:'Dans le bac à gravel ! Passe ton prochain tour. 🚧',bonus:0,skip:true},
+  39:{type:'b',emoji:'🎊',titre:'Dernière ligne droite !',texte:'Pleine puissance ! Avance de 2 cases. 🎊',bonus:2},
+};
+
+let QS = [
+  {q:"Quelle est la capitale de la France ?",r:["Paris","Lyon","Marseille","Bordeaux"],b:0,img:null},
+  {q:"Combien font 7 × 8 ?",r:["54","56","58","64"],b:1,img:null},
+  {q:"Quel est le plus grand océan du monde ?",r:["Atlantique","Indien","Arctique","Pacifique"],b:3,img:null},
+  {q:"En quelle année a débuté la 1ère Guerre mondiale ?",r:["1914","1918","1939","1905"],b:0,img:null},
+  {q:"Quel animal est le symbole de l'Australie ?",r:["Koala","Dingo","Kangourou","Wombat"],b:2,img:null},
+  {q:"Combien de couleurs dans un arc-en-ciel ?",r:["5","6","7","8"],b:2,img:null},
+  {q:"Quelle planète est la plus proche du Soleil ?",r:["Vénus","Mercure","Mars","Terre"],b:1,img:null},
+  {q:"Qui a peint la Joconde ?",r:["Michel-Ange","Raphaël","Léonard de Vinci","Botticelli"],b:2,img:null},
+  {q:"Combien de joueurs dans une équipe de football ?",r:["9","10","11","12"],b:2,img:null},
+  {q:"Quel est le plus long fleuve du monde ?",r:["Amazone","Nil","Mississippi","Congo"],b:1,img:null},
+  {q:"Quelle est la formule chimique de l'eau ?",r:["HO","H2O","H3O","H2O2"],b:1,img:null},
+  {q:"Combien de côtés a un hexagone ?",r:["5","6","7","8"],b:1,img:null},
+  {q:"Quel sport se joue à Wimbledon ?",r:["Golf","Cricket","Tennis","Polo"],b:2,img:null},
+  {q:"Quelle est la monnaie du Japon ?",r:["Won","Yuan","Yen","Ringgit"],b:2,img:null},
+  {q:"Qui a inventé l'ampoule électrique ?",r:["Tesla","Edison","Einstein","Bell"],b:1,img:null},
+  {q:"Quel est le plus petit pays du monde ?",r:["Monaco","Saint-Marin","Vatican","Liechtenstein"],b:2,img:null},
+  {q:"Combien de grammes dans un kilogramme ?",r:["100","500","1000","10000"],b:2,img:null},
+  {q:"Quel pays a gagné le plus de Coupes du monde de foot ?",r:["Allemagne","Argentine","Brésil","Italie"],b:2,img:null},
+  {q:"Combien de planètes dans notre système solaire ?",r:["7","8","9","10"],b:1,img:null},
+  {q:"Qui a écrit Les Misérables ?",r:["Zola","Balzac","Hugo","Flaubert"],b:2,img:null},
+  {q:"Quel animal est le plus grand du monde ?",r:["Éléphant","Baleine bleue","Girafe","Requin baleine"],b:1,img:null},
+  {q:"Où se trouvent les pyramides de Gizeh ?",r:["Louxor","Alexandrie","Le Caire","Assouan"],b:2,img:null},
+  {q:"Combien de dents a un adulte humain ?",r:["28","30","32","34"],b:2,img:null},
+  {q:"Quelle est la capitale de l'Espagne ?",r:["Barcelone","Séville","Valence","Madrid"],b:3,img:null},
+  {q:"Quel est l'os le plus long du corps humain ?",r:["Humérus","Tibia","Fémur","Radius"],b:2,img:null},
+  {q:"Qui a écrit Harry Potter ?",r:["Tolkien","Rowling","Lewis","Pullman"],b:1,img:null},
+  {q:"Quel pays a la plus grande superficie ?",r:["USA","Canada","Chine","Russie"],b:3,img:null},
+  {q:"Combien font 15 × 15 ?",r:["205","215","225","235"],b:2,img:null},
+  {q:"Sport national du Canada ?",r:["Baseball","Hockey sur glace","Basketball","Football américain"],b:1,img:null},
+  {q:"Symbole chimique de l'or ?",r:["Or","Ag","Au","Fe"],b:2,img:null},
+  {q:"Combien d'heures dans une semaine ?",r:["148","156","168","172"],b:2,img:null},
+  {q:"Capitale de l'Australie ?",r:["Sydney","Melbourne","Brisbane","Canberra"],b:3,img:null},
+  {q:"Plus haut sommet du monde ?",r:["K2","Mont Blanc","Kilimandjaro","Everest"],b:3,img:null},
+  {q:"Année de la Révolution française ?",r:["1776","1789","1815","1848"],b:1,img:null},
+  {q:"Combien de secondes dans une heure ?",r:["360","600","3600","36000"],b:2,img:null},
+  {q:"Bleu + Jaune = ?",r:["Violet","Orange","Vert","Marron"],b:2,img:null},
+  {q:"Lettres dans l'alphabet français ?",r:["24","25","26","27"],b:2,img:null},
+  {q:"Mont Fuji : quel pays ?",r:["Chine","Corée","Japon","Vietnam"],b:2,img:null},
+  {q:"Qui a découvert l'Amérique en 1492 ?",r:["Vespucci","Magellan","Colomb","Cabot"],b:2,img:null},
+  {q:"Gaz que l'on expire ?",r:["Oxygène","Azote","CO2","Argon"],b:2,img:null},
+];
+
+/* ═══════════════════════════════════════════════════
+   ÉTAT
+═══════════════════════════════════════════════════ */
+let G={nb:1,players:[],cur:0,rolling:false,done:[],usedQ:new Set(),pendSp:null};
+let DEC={bgColor:'#0d2b0d',bgImg:null,flags:true,trees:true,signs:true,dunlop:true};
+let eqIdx=-1,eqCorr=0,eqImgD=null;
+
+/* ═══════════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════════ */
+function sc(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
+function showH(){sc('sh');}
+function showPl(){sc('spl');initPl();}
+function showAL(){document.getElementById('au').value='';document.getElementById('ap').value='';document.getElementById('aerr').textContent='';sc('sal');}
+function showAdm(){sc('sadm');admTab('dec',document.querySelector('.atab'));}
+
+/* ═══════════════════════════════════════════════════
+   HOME — voitures animées (gauche → droite)
+═══════════════════════════════════════════════════ */
+function buildHomeCars(){
+  const c=document.getElementById('h-cars');
+  c.innerHTML='';
+  MC_COLORS.slice(0,5).forEach(col=>{
+    const d=document.createElement('div');
+    d.innerHTML=mc750s_mini(col.hex,col.hex2,22);
+    d.style.flexShrink='0';
+    c.appendChild(d);
+  });
+}
+buildHomeCars();
+
+/* ═══════════════════════════════════════════════════
+   ADMIN AUTH
+═══════════════════════════════════════════════════ */
+function doLogin(){
+  const u=document.getElementById('au').value.trim();
+  const p=document.getElementById('ap').value.trim();
+  if(u==='t.crepin'&&p==='Tomtom01012009'){showAdm();}
+  else{document.getElementById('aerr').textContent='❌ Identifiants incorrects.';}
+}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('sal').classList.contains('on'))doLogin();});
+
+/* ═══════════════════════════════════════════════════
+   ADMIN TABS
+═══════════════════════════════════════════════════ */
+function admTab(t,btn){
+  document.querySelectorAll('.atab').forEach(b=>b.classList.remove('on'));
+  if(btn)btn.classList.add('on');
+  t==='dec'?renderDec():renderQs();
+}
+
+function renderDec(){
+  const b=document.getElementById('adm-body');
+  b.innerHTML=`
+    <div class="adm-sec">Image de fond du circuit</div>
+    <div class="dec-prev">${DEC.bgImg?`<img src="${DEC.bgImg}">`:'<span style="color:rgba(255,255,255,.3);font-size:.82rem">Aucune image — fond coloré actif</span>'}</div>
+    <button class="btn-upl" onclick="document.getElementById('fbg').click()">📷 Choisir une image de fond</button>
+    <button class="btn-upl" style="color:#ff9999;border-color:rgba(255,100,100,.3)" onclick="DEC.bgImg=null;renderDec()">🗑 Supprimer l'image</button>
+    <div class="adm-sec" style="margin-top:.9rem">Couleur de fond</div>
+    <div class="col-bg-row">
+      ${[['#0d2b0d','Vert'],['#1a3a1a','Vert clair'],['#0a1a0a','Foncé'],['#1a1a2e','Nuit'],['#2d1b00','Terre'],['#0a0a14','Noir']].map(([h,n])=>`<div class="cbg${DEC.bgColor===h?' on':''}" style="background:${h}" title="${n}" onclick="DEC.bgColor='${h}';renderDec()"></div>`).join('')}
+    </div>
+    <div class="adm-sec" style="margin-top:.9rem">Éléments décoratifs</div>
+    <div class="dec-grid">
+      <div class="dec-opt${DEC.flags?' on':''}" onclick="DEC.flags=!DEC.flags;renderDec()">🚩 Drapeaux rouges</div>
+      <div class="dec-opt${DEC.trees?' on':''}" onclick="DEC.trees=!DEC.trees;renderDec()">🌲 Arbres</div>
+      <div class="dec-opt${DEC.signs?' on':''}" onclick="DEC.signs=!DEC.signs;renderDec()">⚠️ Panneaux virage</div>
+      <div class="dec-opt${DEC.dunlop?' on':''}" onclick="DEC.dunlop=!DEC.dunlop;renderDec()">🔴 Pont Dunlop</div>
+    </div>
+    <button class="btn-start" style="font-size:.88rem;padding:.68rem" onclick="showH();toast('✅ Décors enregistrés !')">✅ Appliquer</button>
+  `;
+}
+function loadBG(inp){
+  const f=inp.files[0];if(!f)return;
+  new FileReader().onload=e=>{DEC.bgImg=e.target.result;renderDec();};
+  new FileReader().readAsDataURL(f);
+  const r=new FileReader();r.onload=e=>{DEC.bgImg=e.target.result;renderDec();};r.readAsDataURL(f);
+}
+
+function renderQs(){
+  const b=document.getElementById('adm-body');
+  b.innerHTML=`<div class="adm-sec">Questions (${QS.length})</div>
+  <div class="q-list">${QS.map((q,i)=>`
+    <div class="q-itm">
+      <h4>${i+1}. ${q.q}</h4>
+      ${q.img?`<img src="${q.img}" style="width:100%;max-height:55px;object-fit:cover;border-radius:6px;margin-bottom:.3rem;">`:''}
+      <div>${q.r.map((r,ri)=>`<div class="q-ans-row${ri===q.b?' c':''}">  ${['A','B','C','D'][ri]}) ${r}</div>`).join('')}</div>
+      <div class="q-itm-btns">
+        <button class="btn-qed" onclick="openEQ(${i})">✏️ Modifier</button>
+        <button class="btn-qdl" onclick="delQ(${i})">🗑 Supprimer</button>
+      </div>
+    </div>`).join('')}
+  </div>
+  <button class="btn-qadd" onclick="openEQ(-1)">＋ Ajouter une question</button>`;
+}
+
+function openEQ(i){
+  eqIdx=i;eqImgD=null;
+  const q=i>=0?QS[i]:{q:'',r:['','','',''],b:0,img:null};
+  eqCorr=q.b||0;
+  document.getElementById('meq-ti').textContent=i>=0?`✏️ Question ${i+1}`:'✏️ Nouvelle question';
+  document.getElementById('eq-q').value=q.q;
+  ['eq-0','eq-1','eq-2','eq-3'].forEach((id,ri)=>document.getElementById(id).value=q.r[ri]||'');
+  [0,1,2,3].forEach(j=>document.getElementById(`cs${j}`).classList.toggle('on',j===eqCorr));
+  const p=document.getElementById('eq-imgp');
+  if(q.img){p.src=q.img;p.style.display='block';eqImgD=q.img;}else{p.style.display='none';}
+  document.getElementById('fqi').value='';
+  document.getElementById('meq').classList.add('open');
+}
+function selCorr(i){eqCorr=i;[0,1,2,3].forEach(j=>document.getElementById(`cs${j}`).classList.toggle('on',j===i));}
+function loadQI(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{eqImgD=e.target.result;const p=document.getElementById('eq-imgp');p.src=eqImgD;p.style.display='block';};r.readAsDataURL(f);}
+function saveQ(){
+  const q=document.getElementById('eq-q').value.trim();
+  const r=['eq-0','eq-1','eq-2','eq-3'].map(id=>document.getElementById(id).value.trim());
+  if(!q||r.some(x=>!x)){alert('Remplissez la question et les 4 réponses !');return;}
+  const obj={q,r,b:eqCorr,img:eqImgD||null};
+  if(eqIdx>=0)QS[eqIdx]=obj;else QS.push(obj);
+  document.getElementById('meq').classList.remove('open');
+  renderQs();
+}
+function delQ(i){if(!confirm(`Supprimer la question ${i+1} ?`))return;QS.splice(i,1);renderQs();}
+
+/* ═══════════════════════════════════════════════════
+   PLAYERS
+═══════════════════════════════════════════════════ */
+function setNb(n,btn){G.nb=n;document.querySelectorAll('.nb-b').forEach(b=>b.classList.remove('on'));btn.classList.add('on');initPl();}
+function initPl(){
+  const noms=['Jojo','Coco','Lulu','Didi'],cfg=document.getElementById('pl-cfg');
+  cfg.innerHTML='';
+  for(let i=0;i<G.nb;i++){
+    const ci=i%MC_COLORS.length,c=MC_COLORS[ci];
+    const d=document.createElement('div');d.className='pl-row';
+    d.innerHTML=`
+      <div class="car-prev" id="cp${i}">${mc750s(c.hex,c.hex2,80,38)}</div>
+      <input class="pname" id="pn${i}" value="${noms[i]}" placeholder="Pilote ${i+1}" maxlength="10">
+      <div class="col-row" id="cr${i}">${MC_COLORS.map((col,ci2)=>`<div class="cdot${ci2===ci?' on':''}" style="background:${col.hex}" onclick="setCol(${i},${ci2},this)" title="${col.name}"></div>`).join('')}</div>`;
+    cfg.appendChild(d);
+  }
+}
+function setCol(pi,ci,el){
+  document.querySelectorAll(`#cr${pi} .cdot`).forEach(d=>d.classList.remove('on'));el.classList.add('on');
+  const c=MC_COLORS[ci];
+  document.getElementById(`cp${pi}`).innerHTML=mc750s(c.hex,c.hex2,80,38);
+}
+function getPC(i){
+  const name=document.getElementById(`pn${i}`)?.value.trim()||`Pilote ${i+1}`;
+  const dot=document.querySelector(`#cr${i} .cdot.on`);
+  const ci=dot?[...document.querySelectorAll(`#cr${i} .cdot`)].indexOf(dot):i;
+  const c=MC_COLORS[ci%MC_COLORS.length];
+  return{name,color:c.hex,color2:c.hex2};
+}
+
+/* ═══════════════════════════════════════════════════
+   DÉMARRAGE
+═══════════════════════════════════════════════════ */
+function startGame(){
+  G.players=[];G.done=[];G.cur=0;G.rolling=false;G.usedQ=new Set();
+  for(let i=0;i<G.nb;i++){G.players.push({...getPC(i),pos:0,skip:false});}
+  sc('sg');
+  setTimeout(()=>{initBoard();updateUI();},60);
+}
+
+/* ═══════════════════════════════════════════════════
+   CIRCUIT BUGATTI LE MANS — tracé fidèle
+   Basé sur la carte officielle :
+   - Départ/Arrivée au niveau des stands (bas-gauche)
+   - Grande courbe Dunlop en haut
+   - Pont Dunlop sur la section descendante
+   - Garage Vert (virage 3, bas-droite)
+   - La Chapelle (virage 1, haut-droite)
+   - Raquette (intérieur, virage 2)
+   - Raccordement 6 en bas-gauche
+   - S Bleu (virage 5)
+═══════════════════════════════════════════════════ */
+let BC,BX,BW,BH;
+
+function bugattTrack(W,H){
+  // Points clés inspirés du plan officiel
+  // Coordonnées normalisées 0-1, W×H canvas
+  // Sens de course : dans le sens des aiguilles d'une montre
+  // Départ: stands en bas à gauche
+  const raw=[
+    // ── STANDS / DÉPART (bas-gauche) ──
+    [.08,.80], // 0 = START juste après les stands
+    // Ligne droite des stands vers la droite
+    [.18,.80],[.28,.80],[.38,.80],
+    // Virage 4 (Chemin aux Bœufs) — courbe vers le bas puis remonte
+    [.45,.80],[.50,.82],[.55,.80],[.58,.76],
+    // S Bleu (virage 5) — chicane
+    [.58,.70],[.55,.65],[.52,.62],[.55,.58],[.58,.55],
+    // Raccordement montée vers Dunlop
+    [.60,.50],[.60,.42],[.58,.35],
+    // ── COURBE DUNLOP (haut) ──
+    [.55,.28],[.50,.22],[.42,.18],[.33,.16],[.25,.16],
+    // Village / Tribunes
+    [.18,.18],[.12,.22],[.08,.28],[.06,.35],
+    // Descente vers La Chapelle — ligne droite Hunaudières stylisée
+    [.06,.42],[.06,.50],[.06,.58],[.06,.65],[.06,.70],
+    // ── RETOUR STANDS ──
+    [.06,.75],[.06,.80],[.08,.80],
+  ];
+
+  // Maintenant le vrai tracé LE MANS BUGATTI (sens horaire, plus fidèle)
+  // On repart avec un tracé plus précis
+  const pts=[
+    // DÉPART — ligne des stands, bas-gauche vers la droite
+    [.08,.78],  // 0 - START (juste après les paddocks)
+    [.16,.78],
+    [.25,.78],
+    // Virage bas (vers S5 / Raccordement)
+    [.34,.78],
+    [.40,.80],
+    [.45,.82],  // Virage S.Bleu début
+    [.50,.83],
+    // S Bleu — chicane
+    [.56,.80],
+    [.58,.75],
+    [.56,.70],
+    [.52,.67],
+    [.56,.63],
+    [.60,.60],
+    // Montée vers Dunlop
+    [.62,.54],
+    [.62,.46],
+    [.60,.38],
+    // Courbe Dunlop (haut — virage à gauche)
+    [.56,.30],
+    [.50,.22],
+    [.42,.17],
+    [.33,.15],
+    [.22,.15],
+    [.14,.18],
+    // Ligne droite Tribunes (haut-gauche vers bas)
+    [.08,.25],
+    [.06,.33],
+    [.06,.42],
+    // Ligne droite des stands retour
+    [.06,.52],
+    [.06,.62],
+    [.06,.70],
+    [.06,.76],
+    [.06,.78],  // 30
+    // Raquette intérieure (Le Musée, virage 2) — petit circuit à droite
+    // Cette section est la raquette : on monte à droite
+    [.16,.78],  // rejoint départ — on ferme le circuit
+  ];
+
+  // Tracé final avec exactement 42 points pour 40 cases + départ + arrivée
+  // On utilise le vrai plan Bugatti avec toutes les sections caractéristiques
+  const finalPts = [
+    // 0 = DÉPART (stands, bas gauche)
+    [.10,.76],
+    // Section 1: Ligne droite des stands vers la droite (bas)
+    [.18,.76],[.27,.76],[.36,.76],
+    // Section 2: Virage bas-droite (Chemin aux Bœufs / virage 4)
+    [.44,.78],[.50,.82],[.55,.80],[.58,.75],
+    // Section 3: S Bleu — chicane en bas
+    [.59,.69],[.56,.64],[.52,.61],[.56,.57],[.60,.54],
+    // Section 4: Montée vers la Courbe Dunlop
+    [.62,.47],[.61,.40],[.58,.33],
+    // Section 5: Courbe Dunlop (virage 1, La Chapelle côté droit → haut)
+    [.54,.26],[.47,.20],[.38,.16],[.28,.14],[.19,.16],
+    // Section 6: Ligne droite Tribunes/Stands (haut, gauche vers le bas)
+    [.12,.20],[.07,.27],[.06,.35],[.06,.44],
+    // Section 7: Raquette intérieure (Le Musée, virage 2) — petit ovale
+    [.08,.52],[.12,.56],[.18,.58],[.25,.56],[.30,.52],[.28,.46],
+    // Section 8: Retour vers stands
+    [.22,.42],[.15,.44],[.09,.48],[.08,.55],[.08,.63],
+    // Section finale: Ligne droite retour vers ARRIVÉE
+    [.08,.68],[.08,.73],[.09,.76],
+    // 41 = ARRIVÉE
+    [.10,.76],
+  ];
+
+  return interpolate(finalPts.map(([px,py])=>({x:px*W,y:py*H})), 42);
+}
+
+function interpolate(pts,n){
+  if(pts.length===n)return pts;
+  const segs=[];let total=0;
+  for(let i=0;i<pts.length-1;i++){const d=Math.hypot(pts[i+1].x-pts[i].x,pts[i+1].y-pts[i].y);segs.push(d);total+=d;}
+  const step=total/(n-1);
+  const out=[{...pts[0]}];
+  let rem=step,si=0,frac=0;
+  for(let i=1;i<n-1;i++){
+    while(si<segs.length-1&&rem>segs[si]-frac){rem-=(segs[si]-frac);frac=0;si++;}
+    const t=Math.min(1,(frac+rem)/(segs[si]||1));
+    out.push({x:pts[si].x+(pts[si+1]?.x-pts[si].x||0)*t,y:pts[si].y+(pts[si+1]?.y-pts[si].y||0)*t});
+    frac+=rem;rem=step;
+  }
+  out.push({...pts[pts.length-1]});
+  return out;
+}
+
+function initBoard(){
+  BC=document.getElementById('bc');
+  const wr=BC.parentElement;
+  BW=wr.clientWidth-4;BH=wr.clientHeight-4;
+  BC.width=BW;BC.height=BH;
+  BX=BC.getContext('2d');
+  drawBoard();
+}
+
+function drawBoard(){
+  if(!BX)return;
+  BX.clearRect(0,0,BW,BH);
+
+  // Fond
+  if(DEC.bgImg){
+    const img=new Image();
+    img.onload=()=>{BX.drawImage(img,0,0,BW,BH);drawContent();};
+    img.src=DEC.bgImg;
+    return;
+  }
+  const grd=BX.createLinearGradient(0,0,BW,BH);
+  grd.addColorStop(0,DEC.bgColor);
+  grd.addColorStop(1,lighten(DEC.bgColor,1.35));
+  BX.fillStyle=grd;BX.fillRect(0,0,BW,BH);
+  // Texture herbe damier
+  BX.fillStyle='rgba(0,0,0,.1)';
+  for(let y=0;y<BH;y+=16)for(let x=(y/16%2)*16;x<BW;x+=32)BX.fillRect(x,y,16,16);
+  drawContent();
+}
+
+function lighten(hex,f){
+  let r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return `rgb(${Math.min(255,Math.floor(r*f))},${Math.min(255,Math.floor(g*f))},${Math.min(255,Math.floor(b*f))})`;
+}
+
+function drawContent(){
+  const track=bugattTrack(BW,BH);
+  const TW=Math.max(16,Math.min(BW,BH)*.072);
+  const cR=Math.max(8,TW*.37);
+
+  // ── Zone stands (rectangle) ──
+  drawStands(track,TW);
+
+  // ── Piste asphalte (3 couches) ──
+  strokeT(track,TW+5,'rgba(255,255,255,.05)');
+  strokeT(track,TW,'#202020');
+  strokeT(track,TW-2,'#252525');
+
+  // ── Lignes blanches bord de piste ──
+  strokeT(track,TW+4,'rgba(255,255,255,.0)',true);
+  BX.save();BX.lineWidth=1.2;BX.strokeStyle='rgba(255,255,255,.18)';
+  const k=BX.createPattern(makeLinePattern(),'repeat');
+  BX.strokeStyle=k||'rgba(255,255,255,.18)';
+  BX.setLineDash([TW*.2,TW*.28]);
+  strokeT(track,0);
+  BX.setLineDash([]);BX.restore();
+
+  // ── Décors ──
+  if(DEC.trees) drawTrees(track,TW);
+  if(DEC.flags) drawFlags(track,TW);
+  if(DEC.signs) drawSigns(track,TW);
+  if(DEC.dunlop) drawDunlopBridge(track,TW);
+
+  // ── Zone stands visuelle ──
+  drawStandsLabel(track,TW);
+
+  // ── Cases ──
+  for(let i=0;i<=TOTAL+1;i++){
+    const p=track[i];if(!p)continue;
+    drawCase(p.x,p.y,i,cR);
+  }
+
+  // ── Bandeau FINISH ──
+  drawFinish(track,TW);
+
+  // ── Pions ──
+  G.players.forEach((pl,idx)=>{
+    const p=track[Math.min(pl.pos,TOTAL+1)];if(!p)return;
+    const same=G.players.filter(pp=>pp.pos===pl.pos);
+    const si=same.indexOf(pl),st=same.length;
+    const ang=(si/(st||1))*Math.PI*2,sp=cR*.6;
+    const ox=st>1?Math.cos(ang)*sp:0,oy=st>1?Math.sin(ang)*sp:0;
+    const ti=Math.min(pl.pos+1,TOTAL+1);
+    const nx=track[ti]?.x||p.x,ny=track[ti]?.y||p.y;
+    drawCar(p.x+ox,p.y+oy,Math.atan2(ny-p.y,nx-p.x),pl,idx===G.cur,cR);
+  });
+}
+
+function makeLinePattern(){
+  const c=document.createElement('canvas');c.width=2;c.height=1;
+  const x=c.getContext('2d');x.fillStyle='rgba(255,255,255,.2)';x.fillRect(0,0,1,1);
+  return c;
+}
+
+function strokeT(pts,lw,color,noStroke){
+  if(!lw&&noStroke)return;
+  BX.save();BX.lineWidth=lw||1.5;BX.lineCap='round';BX.lineJoin='round';
+  if(color)BX.strokeStyle=color;
+  else{BX.strokeStyle='rgba(255,255,255,.18)';BX.setLineDash([8,12]);}
+  BX.beginPath();BX.moveTo(pts[0].x,pts[0].y);
+  for(let i=1;i<pts.length;i++){
+    if(i<pts.length-1){const mx=(pts[i].x+pts[i+1].x)/2,my=(pts[i].y+pts[i+1].y)/2;BX.quadraticCurveTo(pts[i].x,pts[i].y,mx,my);}
+    else BX.lineTo(pts[i].x,pts[i].y);
+  }
+  if(!noStroke)BX.stroke();
+  BX.restore();
+}
+
+/* ── Zone stands ── */
+function drawStands(track,TW){
+  const p0=track[0];if(!p0)return;
+  const sw=BW*.22,sh=TW*2.2;
+  BX.save();
+  BX.fillStyle='rgba(100,80,60,.25)';
+  BX.fillRect(p0.x-TW,p0.y-sh/2,sw,sh);
+  BX.strokeStyle='rgba(255,200,100,.25)';BX.lineWidth=1;
+  BX.strokeRect(p0.x-TW,p0.y-sh/2,sw,sh);
+  BX.restore();
+}
+function drawStandsLabel(track,TW){
+  const p0=track[0];if(!p0)return;
+  BX.save();
+  BX.font=`bold ${Math.max(7,TW*.4)}px system-ui`;
+  BX.fillStyle='rgba(255,220,100,.6)';
+  BX.textAlign='center';BX.textBaseline='middle';
+  BX.fillText('STANDS',p0.x+BW*.06,p0.y-TW*1.2);
+  BX.restore();
+}
+
+/* ── Arbres ── */
+function drawTrees(track,TW){
+  [3,7,13,19,25,32,36].forEach(idx=>{
+    if(idx>=track.length-1)return;
+    const p=track[idx];
+    const nx=(track[idx+1]?.x||p.x)-(track[Math.max(0,idx-1)]?.x||p.x);
+    const ny=(track[idx+1]?.y||p.y)-(track[Math.max(0,idx-1)]?.y||p.y);
+    const len=Math.hypot(nx,ny)||1;
+    const d=TW*.9+11;
+    const tx=p.x+(-ny/len)*d,ty=p.y+(nx/len)*d;
+    BX.save();
+    BX.beginPath();BX.arc(tx,ty-8,7,0,Math.PI*2);BX.fillStyle='#1a6e1a';BX.fill();
+    BX.beginPath();BX.arc(tx,ty-14,5,0,Math.PI*2);BX.fillStyle='#228b22';BX.fill();
+    BX.fillStyle='#5c3d1e';BX.fillRect(tx-1.5,ty-2,3,9);
+    BX.restore();
+  });
+}
+
+/* ── Drapeaux rouges ── */
+function drawFlags(track,TW){
+  [5,15,23,34].forEach(idx=>{
+    if(idx>=track.length-1)return;
+    const p=track[idx];
+    const nx=(track[idx+1]?.x||p.x)-(track[Math.max(0,idx-1)]?.x||p.x);
+    const ny=(track[idx+1]?.y||p.y)-(track[Math.max(0,idx-1)]?.y||p.y);
+    const len=Math.hypot(nx,ny)||1;
+    const d=TW+12;
+    const fx=p.x+(-ny/len)*d,fy=p.y+(nx/len)*d;
+    BX.save();
+    BX.strokeStyle='#bbb';BX.lineWidth=1.5;BX.beginPath();BX.moveTo(fx,fy);BX.lineTo(fx,fy-22);BX.stroke();
+    BX.fillStyle='#e8221a';BX.beginPath();BX.moveTo(fx,fy-22);BX.lineTo(fx+13,fy-18);BX.lineTo(fx,fy-13);BX.closePath();BX.fill();
+    BX.restore();
+  });
+}
+
+/* ── Panneaux virage ── */
+function drawSigns(track,TW){
+  [9,17,26,33].forEach(idx=>{
+    if(idx>=track.length-1)return;
+    const p=track[idx];
+    const nx=(track[Math.min(idx+1,track.length-1)]?.x||p.x)-(track[Math.max(0,idx-1)]?.x||p.x);
+    const ny=(track[Math.min(idx+1,track.length-1)]?.y||p.y)-(track[Math.max(0,idx-1)]?.y||p.y);
+    const len=Math.hypot(nx,ny)||1;
+    const d=TW+16;
+    const sx=p.x+(ny/len)*d,sy=p.y+(-nx/len)*d;
+    BX.save();
+    BX.strokeStyle='#bbb';BX.lineWidth=1.5;BX.beginPath();BX.moveTo(sx,sy);BX.lineTo(sx,sy-20);BX.stroke();
+    BX.fillStyle='#ffd600';BX.strokeStyle='#c9a800';BX.lineWidth=1.5;
+    BX.beginPath();BX.moveTo(sx,sy-30);BX.lineTo(sx-9,sy-18);BX.lineTo(sx+9,sy-18);BX.closePath();BX.fill();BX.stroke();
+    BX.fillStyle='#111';BX.font=`bold 9px system-ui`;BX.textAlign='center';BX.textBaseline='middle';
+    BX.fillText('!',sx,sy-23);
+    BX.restore();
+  });
+}
+
+/* ── PONT DUNLOP — élément emblématique ── */
+function drawDunlopBridge(track,TW){
+  // Le pont Dunlop se situe à la fin de la section descendante
+  // Environ case 16-17 dans notre tracé
+  const idx=17;if(idx>=track.length)return;
+  const p=track[idx];
+  const pr=TW*0.7+3;
+
+  BX.save();
+  // Piliers du pont
+  BX.strokeStyle='#888';BX.lineWidth=2.5;
+  const nx=(track[idx+1]?.x||p.x)-(track[Math.max(0,idx-1)]?.x||p.x);
+  const ny=(track[idx+1]?.y||p.y)-(track[Math.max(0,idx-1)]?.y||p.y);
+  const len=Math.hypot(nx,ny)||1;
+  const px1=p.x+(-ny/len)*(TW/2+2),py1=p.y+(nx/len)*(TW/2+2);
+  const px2=p.x+(ny/len)*(TW/2+2),py2=p.y+(-nx/len)*(TW/2+2);
+  BX.beginPath();BX.moveTo(px1,py1);BX.lineTo(px1,py1-22);BX.stroke();
+  BX.beginPath();BX.moveTo(px2,py2);BX.lineTo(px2,py2-22);BX.stroke();
+  // Traverse horizontale
+  BX.lineWidth=3;BX.strokeStyle='#999';
+  BX.beginPath();BX.moveTo(px1,py1-22);BX.lineTo(px2,py2-22);BX.stroke();
+
+  // Grand pneu Dunlop sur la traverse
+  const cx=(px1+px2)/2,cy=(py1+py2)/2-22;
+  BX.lineWidth=5;BX.strokeStyle='#111';
+  BX.beginPath();BX.arc(cx,cy-pr*.8,pr,0,Math.PI*2);BX.stroke();
+  BX.lineWidth=3;BX.strokeStyle='#ff4500';
+  BX.beginPath();BX.arc(cx,cy-pr*.8,pr,0,Math.PI*2);BX.stroke();
+  BX.lineWidth=1.5;BX.strokeStyle='#ff6600';
+  BX.beginPath();BX.arc(cx,cy-pr*.8,pr*.65,0,Math.PI*2);BX.stroke();
+  // Texte DUNLOP
+  BX.fillStyle='#fff';BX.font=`bold ${Math.max(5,pr*.32)}px system-ui`;BX.textAlign='center';BX.textBaseline='middle';
+  BX.fillText('DUNLOP',cx,cy-pr*.8);
+  BX.restore();
+}
+
+/* ── Cases ── */
+function drawCase(x,y,i,r){
+  const isS=i===0,isE=i===TOTAL+1,sp=SPECIALES[i];
+  let bg='#1e3a5f',bdr='rgba(255,255,255,.2)';
+  if(isS){bg='#00c853';bdr='#7effc0';}
+  else if(isE){bg='#ffd600';bdr='#fff176';}
+  else if(sp){bg=sp.type==='b'?'#1565c0':'#c62828';bdr=sp.type==='b'?'#90caf9':'#ef9a9a';}
+  BX.beginPath();BX.arc(x,y,r,0,Math.PI*2);BX.fillStyle=bg;BX.fill();
+  BX.strokeStyle=bdr;BX.lineWidth=1.5;BX.stroke();
+  BX.save();BX.textAlign='center';BX.textBaseline='middle';
+  if(isS){BX.font=`bold ${r*.65}px system-ui`;BX.fillStyle='#fff';BX.fillText('GO',x,y);}
+  else if(isE){/* couvert par FINISH */}
+  else if(sp){BX.font=`${r*.85}px system-ui`;BX.fillText(sp.emoji,x,y);}
+  else{BX.font=`bold ${r*.68}px system-ui`;BX.fillStyle='rgba(255,255,255,.72)';BX.fillText(i,x,y);}
+  BX.restore();
+}
+
+/* ── Bandeau FINISH damier ── */
+function drawFinish(track,TW){
+  const p=track[TOTAL+1],prev=track[TOTAL];if(!p||!prev)return;
+  const nx=p.x-prev.x,ny=p.y-prev.y,len=Math.hypot(nx,ny)||1;
+  const ox=-ny/len,oy=nx/len;
+  const bw=TW+4;const sz=5;const cols=Math.ceil(bw*2.2/sz);
+  BX.save();
+  for(let ci=0;ci<cols;ci++){for(let ri=0;ri<3;ri++){
+    BX.fillStyle=(ci+ri)%2===0?'#fff':'#111';
+    BX.fillRect(p.x+ox*(ci*sz-bw)-oy*((ri-.5)*sz),p.y+oy*(ci*sz-bw)+ox*((ri-.5)*sz),sz+1,sz+1);
+  }}
+  const fs=Math.max(7,TW*.32);
+  BX.font=`bold ${fs}px system-ui`;BX.textAlign='center';BX.textBaseline='middle';
+  BX.fillStyle='#ffd600';BX.strokeStyle='#000';BX.lineWidth=2;
+  const tx=p.x-oy*TW*.85,ty=p.y+ox*TW*.85;
+  BX.strokeText('FINISH',tx,ty);BX.fillText('FINISH',tx,ty);
+  BX.restore();
+}
+
+/* ── Voiture sur piste ── */
+function drawCar(x,y,angle,pl,active,r){
+  BX.save();BX.translate(x,y);BX.rotate(angle);
+  if(active){
+    BX.shadowColor=pl.color;BX.shadowBlur=10;
+    BX.beginPath();BX.arc(0,0,r*1.18,0,Math.PI*2);BX.fillStyle=pl.color+'2a';BX.fill();
+    BX.strokeStyle=pl.color;BX.lineWidth=2;BX.stroke();
+  }
+  BX.shadowBlur=0;
+  const w=r*2.7,h=r*1.1;
+  // Roues
+  [[-w*.38,h*.38],[w*.38,h*.38]].forEach(([wx,wy])=>{BX.beginPath();BX.ellipse(wx,wy,r*.4,r*.29,0,0,Math.PI*2);BX.fillStyle='#0a0a0a';BX.fill();});
+  // Corps (McLaren 750S vue du dessus, orientée dans la direction)
+  BX.beginPath();BX.ellipse(0,h*.06,w*.45,h*.34,0,0,Math.PI*2);BX.fillStyle=pl.color2;BX.fill();
+  BX.beginPath();BX.ellipse(-w*.04,-h*.04,w*.34,h*.25,0,0,Math.PI*2);BX.fillStyle=pl.color;BX.fill();
+  // Nez pointu
+  BX.beginPath();BX.moveTo(w*.38,0);BX.lineTo(w*.48,-h*.04);BX.lineTo(w*.38,h*.08);BX.closePath();BX.fillStyle=pl.color;BX.fill();
+  // Cockpit
+  BX.beginPath();BX.ellipse(-w*.04,-h*.09,w*.12,h*.19,0,0,Math.PI*2);BX.fillStyle='rgba(150,220,255,.32)';BX.fill();
+  // Aileron arrière
+  BX.fillStyle=pl.color2;BX.fillRect(-w*.45,-h*.03,w*.07,h*.06);
+  BX.restore();
+}
+
+/* ═══════════════════════════════════════════════════
+   UI TOUR
+═══════════════════════════════════════════════════ */
+function updateUI(){
+  const p=G.players[G.cur];
+  document.getElementById('g-av').innerHTML=mc750s_mini(p.color,p.color2,13);
+  document.getElementById('g-nm').textContent=p.name;
+  document.getElementById('g-pos').textContent=p.pos===0?'Départ':`Case ${p.pos}`;
+  document.getElementById('g-dt').style.background=p.color;
+  const pmr=document.getElementById('pmr');
+  pmr.innerHTML=G.players.map((pl,i)=>`<div class="pm">${mc750s_mini(pl.color,pl.color2,11)}<span>${pl.name}</span><div class="pm-dot" style="background:${pl.color};opacity:${i===G.cur?1:.32}"></div></div>`).join('');
+}
+
+/* ═══════════════════════════════════════════════════
+   DÉ SVG RÉALISTE
+═══════════════════════════════════════════════════ */
+const DOTS_POS={1:[[30,30]],2:[[18,18],[42,42]],3:[[18,18],[30,30],[42,42]],4:[[18,18],[42,18],[18,42],[42,42]],5:[[18,18],[42,18],[30,30],[18,42],[42,42]],6:[[18,18],[42,18],[18,30],[42,30],[18,42],[42,42]]};
+function rDice(v){const g=document.getElementById('dd');if(g)g.innerHTML=DOTS_POS[v].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4.5"/>`).join('');}
+
+function rollDice(){
+  if(G.rolling)return;
+  const p=G.players[G.cur];
+  if(p.skip){p.skip=false;toast(`${p.name} passe son tour ! 🚦`);setTimeout(()=>nextPl(),1500);return;}
+  G.rolling=true;document.getElementById('br').disabled=true;
+  const dw=document.getElementById('dw');dw.classList.add('spin');
+  let c=0;const iv=setInterval(()=>{rDice(Math.floor(Math.random()*6)+1);c++;
+    if(c>10){clearInterval(iv);dw.classList.remove('spin');const v=Math.floor(Math.random()*6)+1;rDice(v);movePl(v);}
+  },52);
+}
+
+/* ═══════════════════════════════════════════════════
+   DÉPLACEMENT
+═══════════════════════════════════════════════════ */
+function movePl(val){
+  const p=G.players[G.cur];
+  const np=Math.min(p.pos+val,TOTAL+1);
+  animMv(p,p.pos,np,()=>{
+    p.pos=np;drawBoard();updateUI();
+    if(np>=TOTAL+1){setTimeout(()=>trigWin(),600);return;}
+    const sp=SPECIALES[np];
+    if(sp)setTimeout(()=>openSpecial(sp),350);
+    else setTimeout(()=>askQ(),350);
+  });
+}
+function animMv(pl,from,to,cb){
+  if(from>=to){cb();return;}
+  let cur=from;
+  const step=()=>{cur++;pl.pos=cur;drawBoard();if(cur<to)setTimeout(step,95);else cb();};
+  setTimeout(step,75);
+}
+
+/* ═══════════════════════════════════════════════════
+   CASES SPÉCIALES
+═══════════════════════════════════════════════════ */
+function openSpecial(sp){
+  G.pendSp=sp;
+  document.getElementById('msp-em').textContent=sp.emoji;
+  document.getElementById('msp-ti').textContent=sp.titre;
+  document.getElementById('msp-tx').textContent=sp.texte;
+  document.getElementById('msp').classList.add('open');
+}
+function closeSpecial(){
+  document.getElementById('msp').classList.remove('open');
+  const sp=G.pendSp;G.pendSp=null;
+  if(!sp)return unlock();
+  const p=G.players[G.cur];
+  if(sp.skip){p.skip=true;unlock();nextPl();}
+  else if(sp.reroll){unlock();}
+  else if(sp.bonus!==0){
+    const np=Math.max(0,Math.min(p.pos+sp.bonus,TOTAL+1));
+    if(np>p.pos)animMv(p,p.pos,np,()=>{p.pos=np;drawBoard();updateUI();if(np>=TOTAL+1){setTimeout(()=>trigWin(),400);return;}unlock();nextPl();});
+    else{p.pos=np;drawBoard();updateUI();unlock();nextPl();}
+  } else{unlock();nextPl();}
+}
+
+/* ═══════════════════════════════════════════════════
+   QUESTIONS
+═══════════════════════════════════════════════════ */
+let qAns=false,qOkTxt='';
+function askQ(){
+  if(!QS.length){unlock();nextPl();return;}
+  let idx=Math.floor(Math.random()*QS.length),t=0;
+  while(G.usedQ.has(idx)&&t<QS.length){idx=(idx+1)%QS.length;t++;}
+  if(t>=QS.length)G.usedQ=new Set();
+  G.usedQ.add(idx);
+  const q=QS[idx];
+  const sh=q.r.map((r,ri)=>({r,ok:ri===q.b})).sort(()=>Math.random()-.5);
+  qOkTxt=sh.find(s=>s.ok)?.r||'';
+  qAns=false;
+  const qi=document.getElementById('qimg');
+  if(q.img){qi.src=q.img;qi.style.display='block';}else{qi.style.display='none';}
+  document.getElementById('qtx').textContent=q.q;
+  document.getElementById('qans').innerHTML=sh.map((a,ai)=>`<button class="qb" id="qa${ai}" onclick="ansQ(${ai},${a.ok},'${a.r.replace(/'/g,"\\'")}')">${a.r}</button>`).join('');
+  document.getElementById('qres').textContent='';
+  document.getElementById('mq').classList.add('open');
+}
+function ansQ(ai,ok,txt){
+  if(qAns)return;qAns=true;
+  document.querySelectorAll('.qb').forEach(b=>b.disabled=true);
+  document.querySelectorAll('.qb').forEach(b=>{if(b.textContent===qOkTxt)b.classList.add('ok');});
+  const res=document.getElementById('qres');
+  if(ok){
+    document.getElementById(`qa${ai}`).classList.add('ok');
+    res.textContent='✅ Bonne réponse ! +2 cases bonus ! 🚀';res.style.color='#7effc0';
+    setTimeout(()=>{
+      document.getElementById('mq').classList.remove('open');
+      const p=G.players[G.cur];const np=Math.min(p.pos+2,TOTAL+1);
+      animMv(p,p.pos,np,()=>{p.pos=np;drawBoard();updateUI();if(np>=TOTAL+1){setTimeout(()=>trigWin(),400);return;}unlock();nextPl();});
+    },1900);
+  } else {
+    document.getElementById(`qa${ai}`).classList.add('ko');
+    res.textContent='❌ Mauvaise réponse ! Tour perdu. 😞';res.style.color='#ff9999';
+    setTimeout(()=>{
+      document.getElementById('mq').classList.remove('open');
+      G.players[G.cur].skip=true;unlock();nextPl();
+    },2300);
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════════════ */
+function unlock(){G.rolling=false;const b=document.getElementById('br');if(b)b.disabled=false;}
+function nextPl(){
+  if(G.players.length===1){unlock();return;}
+  let next=(G.cur+1)%G.players.length,t=0;
+  while(G.done.includes(next)&&t<G.players.length){next=(next+1)%G.players.length;t++;}
+  G.cur=next;unlock();updateUI();drawBoard();
+}
+
+function trigWin(){
+  document.getElementById('w-nm').textContent=G.players[G.cur].name;
+  const s=[...G.players].sort((a,b)=>b.pos-a.pos);
+  const m=['🥇','🥈','🥉'],h=['pb2','pb1','pb3'];
+  const ro=[s[1],s[0],s[2]].filter(Boolean);
+  document.getElementById('w-pod').innerHTML=ro.map((p,i)=>`
+    <div class="pc">
+      <div>${mc750s_mini(p.color,p.color2,16)}</div>
+      <div class="pn">${p.name}</div>
+      <div class="pb ${h[i]}">${m[ro.indexOf(p)]}</div>
+    </div>`).join('');
+  const cw=document.getElementById('cfw');cw.innerHTML='';
+  for(let i=0;i<35;i++){
+    const c=document.createElement('div');c.className='cf';
+    c.style.cssText=`left:${Math.random()*100}%;background:${['#ff6600','#ffd600','#00c853','#1565c0','#e91e63'][i%5]};animation-delay:${Math.random()*2}s;animation-duration:${2+Math.random()*2}s;width:${7+Math.random()*7}px;height:${7+Math.random()*7}px;border-radius:${Math.random()>.5?'50%':'2px'};`;
+    cw.appendChild(c);
+  }
+  sc('sw');
+}
+
+let _tt;
+function toast(msg){const e=document.getElementById('toast');e.textContent=msg;e.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>e.classList.remove('show'),2200);}
+
+/* ═══════════════════════════════════════════════════
+   RESIZE & INIT
+═══════════════════════════════════════════════════ */
+window.addEventListener('resize',()=>{if(document.getElementById('sg').classList.contains('on'))initBoard();});
+window.addEventListener('orientationchange',()=>setTimeout(()=>{if(document.getElementById('sg').classList.contains('on'))initBoard();},350));
+
+rDice(1);
+initPl();
+</script>
+</body>
+</html>
